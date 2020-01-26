@@ -11,7 +11,6 @@ read -p 'what is the URL of the repository you want to clone? ' project_repo_nam
 
 # todo make database import optional
 # import_database=false
-read -p 'what is the domain of the kinsta site? ' kinsta_domain
 
 read -p 'what is the domain of the kinsta site? ' kinsta_domain
 read -p 'what is the kinsta sites IP address? ' kinsta_ip
@@ -36,13 +35,13 @@ cp env-example .env
 # user_group=id -g
 
 # replace NEW_UID in .env file (using variables not yet tested)
-sed -i '' 's/NEW_UID=1000/NEW_UID=$user_id/g' ./env
+sed -i '' 's/NEW_UID=1000/NEW_UID=$user_id/g' .env
 
 # replace NEW_GID in .env file (using variables not yet tested)
-sed -i '' 's/NEW_GID=1000/NEW_GID=$user_group/g' ./env
+sed -i '' 's/NEW_GID=1000/NEW_GID=$user_group/g' .env
 
 # start devil box running (maybe turn this into a flag? -- start)
-docker-compose up -d
+docker-compose up
 
 # this could be done in one command...
 mkdir -p www/data/$project_dir_name/htdocs
