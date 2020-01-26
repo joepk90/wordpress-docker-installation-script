@@ -70,12 +70,6 @@ ssh -o "StrictHostKeyChecking no" $kinsta_name@$kinsta_ip -p $kinsta_port -t "cd
 
 
 
-
-
-# this can be done in one command
-sudo vi /etc/hosts
-# 127.0.0.1 PROJECT_DIR_NAME.loc
-
 # go back to root docker directory
 cd ../../../../
 ./shell.sh
@@ -94,3 +88,8 @@ mysql -h mysql -u root -p '' $project_db_name < docker-db.sql
 
 # find and replace domain in database
 wp search-replace $kinsta_domain  "${project_dir_name}.loc" --all-tables --precise
+
+
+# todo make the install script add this to your hosts
+# sudo vi /etc/hosts
+# 127.0.0.1 PROJECT_DIR_NAME.loc
