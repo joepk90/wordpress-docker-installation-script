@@ -35,10 +35,10 @@ cp env-example .env
 # user_group=id -g
 
 # replace NEW_UID in .env file (using variables not yet tested)
-sed -i '' 's/NEW_UID=1000/NEW_UID=$user_id/g' .env
+sed -i '' "s/NEW_UID=1000/NEW_UID=${user_id}/g" .env
 
 # replace NEW_GID in .env file (using variables not yet tested)
-sed -i '' 's/NEW_GID=1000/NEW_GID=$user_group/g' .env
+sed -i '' "s/NEW_GID=1000/NEW_GID=${user_group}/g" .env
 
 # start devil box running (maybe turn this into a flag? -- start)
 docker-compose up
