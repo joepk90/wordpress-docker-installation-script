@@ -1,3 +1,6 @@
+read -p 'what is your user id (run id -u to find out)? ' user_id
+read -p 'what is your user id (run id -g to find out)? ' user_group
+
 read -p 'what is the name of your new projects directory? ' project_dir_name
 read -p 'what do you want to call your new projects database? ' project_db_name
 
@@ -8,6 +11,7 @@ read -p 'what is the URL of the repository you want to clone? ' project_repo_nam
 
 # todo make database import optional
 # import_database=false
+read -p 'what is the domain of the kinsta site? ' kinsta_domain
 
 read -p 'what is the domain of the kinsta site? ' kinsta_domain
 read -p 'what is the kinsta sites IP address? ' kinsta_ip
@@ -20,15 +24,16 @@ read -p 'what is the kinsta sites database table prefix? ' kinsta_db_table_prefi
 # testing
 # echo $project_dir_name $project_db_name $project_repo_name $kinsta_domain $kinsta_ip $kinsta_name $kinsta_port $kinsta_dir_path $kinsta_password $kinsta_db_table_prefix
 
-$ git clone https://github.com/cytopia/devilbox
-$ mv devilbox $project_dir_name
+git clone https://github.com/cytopia/devilbox
+mv devilbox $project_dir_name
 
-$ cd $project_dir_name
-$ cp env-example .env
+cd $project_dir_name
+cp env-example .env
 
 # setup env file
-user_id=id -u
-user_group=id -g
+# todo make this work automatically ithout providing them in the promt
+# user_id=id -u
+# user_group=id -g
 
 # replace NEW_UID in .env file (using variables not yet tested)
 sed -i '' 's/NEW_UID=1000/NEW_UID=$user_id/g' ./env
