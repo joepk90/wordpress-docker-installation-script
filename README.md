@@ -7,3 +7,6 @@ chmod +x wordpress-docker-install.sh
 
 # run the install script
 ./wordpress-docker-install.sh
+
+
+TODO: add echo statements to describe process - helpful for debugging
