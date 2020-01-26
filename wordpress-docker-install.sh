@@ -16,9 +16,9 @@ read -p 'what is the domain of the kinsta site? ' kinsta_domain
 read -p 'what is the kinsta sites IP address? ' kinsta_ip
 read -p 'what is the kinsta sites name? ' kinsta_name
 read -p 'what is the kinsta sites port? ' kinsta_port
-read -p 'what is the kinsta sites directory_parth? ' kinsta_dir_path
+read -p 'what is the kinsta sites directory_path? ' kinsta_dir_path
 read -sp 'what is the kinsta sites SFTP password? ' kinsta_password
-read -p 'what is the kinsta sites database table prefix? ' kinsta_db_table_prefix
+read -p 'what is the kinsta sites database table prefix (for example: wp_)? ' kinsta_db_table_prefix
 
 # testing
 # echo $project_dir_name $project_db_name $project_repo_name $kinsta_domain $kinsta_ip $kinsta_name $kinsta_port $kinsta_dir_path $kinsta_password $kinsta_db_table_prefix
