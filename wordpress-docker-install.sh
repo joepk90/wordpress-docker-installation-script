@@ -48,19 +48,25 @@ mkdir -p www/data/$project_dir_name/htdocs
 cd www/data/$project_dir_name/htdocs
 
 # get project files from bitbucket repository
-git clone $project_repo_name
+git clone $project_repo_name repository-files
 
 # another flag or command might be required here to mv hidden files
-mv $project_dir_name/* ./
+mv repository-files/* ./
+
+# untested
+# rm -rf repository-files
 
 # export database from kinsta install
-ssh $kinsta_name@$kinsta_ip -p $kinsta_port -t "cd $kinsta_dir_path; wp db export docker-db.sql; bash"
+# -o "StrictHostKeyChecking no" stops shh checking for authenticity of key fingerprint
+ssh -o "StrictHostKeyChecking no" $kinsta_name@$kinsta_ip -p $kinsta_port -t "cd $kinsta_dir_path; wp db export docker-db.sql; bash"
 
 # copy database to docker project directory
-rsync -chavzP -e "ssh -p $kinsta_port" $kinsta_name@$kinsta_ip:$kinsta_dir_path/docker-db.sql ./
+# rsync -chavzP -e "ssh -p $kinsta_port" $kinsta_name@$kinsta_ip:$kinsta_dir_path/docker-db.sql ./
+rsync -chavzP -e ssh -o "StrictHostKeyChecking no" -p $kinsta_port $kinsta_name@$kinsta_ip:$kinsta_dir_path/docker-db.sql ./
 
 # delete exported database on Kinsta server (clean up)
-ssh $kinsta_name@$kinsta_ip -p $kinsta_port -t "cd $kinsta_ip:$kinsta_dir_path; rm docker-db.sql; exit; bash"
+# -o "StrictHostKeyChecking no" stops shh checking for authenticity of key fingerprint
+ssh -o "StrictHostKeyChecking no" $kinsta_name@$kinsta_ip -p $kinsta_port -t "cd $kinsta_ip:$kinsta_dir_path; rm docker-db.sql; exit; bash"
 
 
 
