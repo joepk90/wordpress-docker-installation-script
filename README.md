@@ -3,10 +3,10 @@
 cp wordpress-docker-installation-script/wordpress-docker-install.sh ./
 
 # make the install script executable
-chmod +x wordpress-docker-install.sh
+chmod +x wordpress-docker-installation-script/wordpress-docker-install.sh
 
 # run the install script
-./wordpress-docker-install.sh
+wordpress-docker-installation-script/wordpress-docker-install.sh
 
 
 TODO: add echo statements to describe process - helpful for debugging
