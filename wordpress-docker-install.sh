@@ -63,12 +63,12 @@ mv repository-files/* ./
 ssh -o "StrictHostKeyChecking no" $kinsta_name@$kinsta_ip -p $kinsta_port -t "cd $kinsta_dir_path; wp db export docker-db.sql; exit; bash"
 
 # copy database to docker project directory
-# rsync -chavzP -e "ssh -p $kinsta_port" $kinsta_name@$kinsta_ip:$kinsta_dir_path/docker-db.sql ./
-rsync -chavzP -e ssh -p $kinsta_port $kinsta_name@$kinsta_ip:$kinsta_dir_path/docker-db.sql ./
+rsync -chavzP -e "ssh -p $kinsta_port" $kinsta_name@$kinsta_ip:$kinsta_dir_path/docker-db.sql ./
+# rsync -chavzP -e ssh -p $kinsta_port $kinsta_name@$kinsta_ip:$kinsta_dir_path/docker-db.sql ./
 
 # delete exported database on Kinsta server (clean up)
 # -o "StrictHostKeyChecking no" stops shh checking for authenticity of key fingerprint
-ssh -o "StrictHostKeyChecking no" $kinsta_name@$kinsta_ip -p $kinsta_port -t "cd $kinsta_ip:$kinsta_dir_path; rm docker-db.sql; exit; bash"
+ssh -o "StrictHostKeyChecking no" $kinsta_name@$kinsta_ip -p $kinsta_port -t "cd $kinsta_dir_path; rm docker-db.sql; exit; bash"
 
 
 
