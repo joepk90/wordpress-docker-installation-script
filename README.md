@@ -31,3 +31,6 @@ wordpress-docker-installation-script/wordpress-docker-install.sh
 
 
 TODO: add echo statements to describe process - helpful for debugging
+
+# Enable caching in the .env file (Optional)
+MOUNT_OPTIONS=,cached
