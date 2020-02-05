@@ -26,7 +26,7 @@ echo "import complete"
 
 rm wordpress-database-import.sh
 
-echo "Finally exit the docker shell and add the following enry to your host file. run the following commands:"
-echo "exit"
-echo "sudo vim /etc/hosts"
-echo "127.0.0.1 ${project_db_name}.loc"
+printf "Finally exit the docker shell and add the following enry to your host file. run the following commands:\n"
+printf "exit\n"
+printf "sudo vim /etc/hosts\n"
+printf "127.0.0.1 ${project_dir_name}.loc\n"

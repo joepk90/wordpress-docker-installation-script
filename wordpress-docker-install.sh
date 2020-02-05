@@ -84,11 +84,11 @@ chmod +x wordpress-docker-installation-script/wordpress-database-import.sh
 echo "copying wordpress-database-import script to project directory"
 cp wordpress-docker-installation-script/wordpress-database-import.sh "${project_dir_name}/data/www/$project_dir_name/htdocs/"
 
-echo "now run the following commands:"
-echo "cd ${project_dir_name}"
-echo "./shell.sh"
-echo "cd ${project_dir_name}/htdocs"
-echo "./wordpress-database-import.sh"
+printf "now run the following commands:\n"
+printf "cd ${project_dir_name}\n"
+printf "./shell.sh\n\n"
+printf "cd ${project_dir_name}/htdocs\n"
+printf "./wordpress-database-import.sh\n"
 
 exit 1
 
