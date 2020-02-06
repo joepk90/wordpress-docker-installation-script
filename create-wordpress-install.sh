@@ -1,6 +1,18 @@
-cd ${project_dir_name}/htdocs/
+if [ -n  "$1" ]
+then
+project_dir_name=$1
+else
+  exit 1
+fi
 
-read -p 'what do you want to call your new projects database? ' project_db_name
+if [ -n  "$2" ]
+then
+project_db_name=$2
+else
+  exit 1
+fi
+
+cd ${project_dir_name}/htdocs/
 
 wget https://wordpress.org/latest.tar.gz
 tar -xzvf latest.tar.gz

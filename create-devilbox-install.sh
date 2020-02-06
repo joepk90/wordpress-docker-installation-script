@@ -1,3 +1,5 @@
+current_dir_path=$(pwd)
+
 if [ -n "$user_id" ]
 then
   echo "Your User ID is ${user_id}"
@@ -20,8 +22,8 @@ else
 fi
 
 
-git clone https://github.com/cytopia/devilbox
-mv devilbox $project_dir_name
+git clone https://github.com/cytopia/devilbox $project_dir_name
+# mkdir $project_dir_name // testing
 
 cd $project_dir_name
 cp env-example .env
@@ -51,12 +53,12 @@ then
   echo "Running Wordpress installer. This will create a a new Wordpress database and install Wordpress"
 
 # go back to the orignal directory where script was running
-  cd ../../../../../
+  cd $current_dir_path
 
   echo "making the prepare-wordpress-install-script.sh script executable"
   chmod +x wordpress-docker-installation-script/prepare-wordpress-install-script.sh
 
-  wordpress-docker-installation-script/prepare-wordpress-install-script.sh
+  wordpress-docker-installation-script/prepare-wordpress-install-script.sh $project_dir_name
 
 else
 
@@ -71,4 +73,5 @@ else
 
 fi
 
-echo "Devilbox Install script complete"
+printf "\nDevilbox Install script complete! \n"
+printf "\nnow visit ${project_dir_name}.loc\n"
