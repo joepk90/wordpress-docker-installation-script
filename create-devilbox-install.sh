@@ -71,9 +71,9 @@ else
     cd $current_dir_path
 
     echo "making the clone-git-repoistory.sh script executable"
-    chmod +x wordpress-docker-installation-script/includes/clone-git-repoistory.sh
+    chmod +x wordpress-docker-installation-script/includes/clone-git-repository.sh
 
-    wordpress-docker-installation-script/includes/clone-git-repoistory.sh $project_dir_name
+    wordpress-docker-installation-script/includes/clone-git-repository.sh $project_dir_name
 
   fi
 
