@@ -46,6 +46,13 @@ docker-compose up -d
 mkdir -p data/www/$project_dir_name/htdocs
 cd data/www/$project_dir_name/htdocs
 
+
+
+
+#
+# option 1: setup a default Wordpress installation (including a database)
+#
+
 read -p 'Do you want to create a default Wordpress installation? (y/n) ' run_default_wp_installer
 
 if [ "$run_default_wp_installer" == "y" ]
@@ -56,47 +63,112 @@ then
   cd $current_dir_path
 
   echo "making the prepare-wordpress-install-script.sh script executable"
-  chmod +x wordpress-docker-installation-script/prepare-wordpress-install-script.sh
+  chmod +x wordpress-docker-installation-script/includes/setup-default-wp-database.sh
 
-  wordpress-docker-installation-script/prepare-wordpress-install-script.sh $project_dir_name
+  echo "copying wordpress-database-import script to project directory"
+  cp wordpress-docker-installation-script/includes/setup-default-wp-database.sh "${project_dir_name}/data/www/"
 
-else
+  cd $project_dir_name/data/www/$project_dir_name/htdocs
 
-  read -p 'Do you want to clone an exisiting wordpress repository? (y/n) ' run_clone_repository_script
+  wget https://wordpress.org/latest.tar.gz
+  tar -xzvf latest.tar.gz
+  mv wordpress/* ./
+  rmdir wordpress/
+  rm latest.tar.gz
 
-  if [ "$run_clone_repository_script" == "y" ]
-  then
+  cd $current_dir_path/$project_dir_name
 
-    # go back to the orignal directory where script was running
-    cd $current_dir_path
+  read -p 'what do you want to call your new projects database? ' project_db_name
 
-    echo "making the clone-git-repoistory.sh script executable"
-    chmod +x wordpress-docker-installation-script/includes/clone-git-repository.sh
+  # run script within docker shell
+  docker-compose exec --user devilbox php bash -l setup-default-wp-database.sh ${project_dir_name} ${project_db_name}
 
-    wordpress-docker-installation-script/includes/clone-git-repository.sh $project_dir_name
-
-  fi
-
-  read -p 'Do you want to import a database from Kinsta? (y/n) ' run_kinsta_db_importer
-
-  if [ "$run_kinsta_db_importer" == "y" ]
-  then
-
-
-  echo "making the clone-kinsta-database.sh script executable"
-  chmod +x wordpress-docker-installation-script/includes/clone-kinsta-database.sh
-
-  echo "copying clone-kinsta-database.shscript to project directory"
-  cp wordpress-docker-installation-script/includes/clone-kinsta-database.sh "${project_dir_name}/data/www/"
-
-  cd ${project_dir_name}
-
-  # run script ithin docker shell
-  docker-compose exec --user devilbox php bash -l clone-kinsta-database.sh ${project_dir_name}
-
-  fi
+  cd $current_dir_path
+  rm "${project_dir_name}/data/www/setup-default-wp-database.sh"
 
 fi
+
+
+
+
+#
+# option 2: custom Wordpress repository clone
+#
+
+
+# check if default Wordpress install has been run
+if [ "$run_default_wp_installer" == "n" ]
+then
+read -p 'Do you want to clone an exisiting wordpress repository? (y/n) ' run_clone_repository_script
+fi
+
+if [ "$run_clone_repository_script" == "y" ]
+then
+
+  # go back to the orignal directory where script was running
+  cd $current_dir_path
+
+  echo "making the clone-git-repository.sh script executable"
+  chmod +x wordpress-docker-installation-script/includes/clone-git-repository.sh
+
+  wordpress-docker-installation-script/includes/clone-git-repository.sh $project_dir_name
+
+fi
+
+
+
+
+
+
+#
+# option 3: importing a Wordpress database
+#
+
+# check if default Wordpress install has been run
+if [ "$run_default_wp_installer" == "n" ]
+then
+read -p 'Do you want to import a database from a server? (y/n) ' run_server_db_importer
+fi
+
+
+if [ "$run_server_db_importer" == "y" ]
+then
+
+cd $current_dir_path
+cd data/www/$project_dir_name/htdocs
+
+read -p 'what do you want to call your new projects database? ' project_db_name
+read -p 'what is the server sites IP address? ' server_ip
+read -p 'what is the server sites name? ' server_name
+read -p 'what is the server sites port? ' server_port
+read -p 'what is the server sites directory_path? ' server_dir_path
+read -p 'what is the domain of the server site? ' server_domain
+read -p 'what is the server sites database table prefix (for example: wp_)? ' server_db_table_prefix
+
+echo "making the clone-server-database.sh script executable"
+chmod +x wordpress-docker-installation-script/includes/clone-server-database.sh $server_ip $server_name $server_port $server_dir_path $server_domain $server_domain
+ 
+echo "copying clone-server-database.sh script to project directory"
+cp wordpress-docker-installation-script/includes/import-server-database.sh "${project_dir_name}/data/www/"
+
+cd $current_dir_path/$project_dir_name
+
+# run script within docker shell
+docker-compose exec --user devilbox php bash -l import-server-database.sh $project_dir_name $project_db_name $kinsta_db_table_prefix $kinsta_domain
+
+fi
+
+
+
+
+#
+# update the /etc/hosts file
+#
+
+echo "making the update-hosts.sh script executable"
+chmod +x wordpress-docker-installation-script/includes/update-hosts.sh
+
+wordpress-docker-installation-script/includes/update-hosts.sh $project_dir_name
 
 printf "\nDevilbox Install script complete! \n"
 printf "\nnow visit ${project_dir_name}.loc\n"
