@@ -1,3 +1,7 @@
+# SHELL SCRIPT
+# will be run from withon the docker shell
+# starting directory: project/data/www/
+
 # $server_ip
 # $server_name
 # $server_port

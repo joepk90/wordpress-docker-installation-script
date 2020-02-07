@@ -21,6 +21,18 @@ else
   read -p 'what is the name of your new projects directory? ' project_dir_name
 fi
 
+#
+# setup utilities:
+#
+
+# setup executable shell script
+chmod +x wordpress-docker-installation-script/includes/prepare-shell-script.sh
+
+
+
+#
+# start install:
+#
 
 git clone https://github.com/cytopia/devilbox $project_dir_name
 # mkdir $project_dir_name // testing
@@ -48,7 +60,6 @@ cd data/www/$project_dir_name/htdocs
 
 
 
-
 #
 # option 1: setup a default Wordpress installation (including a database)
 #
@@ -62,28 +73,27 @@ then
   # go back to the orignal directory where script was running
   cd $current_dir_path
 
-  echo "making the prepare-wordpress-install-script.sh script executable"
-  chmod +x wordpress-docker-installation-script/includes/setup-default-wp-database.sh
-
-  echo "copying wordpress-database-import script to project directory"
-  cp wordpress-docker-installation-script/includes/setup-default-wp-database.sh "${project_dir_name}/data/www/"
-
-  cd $project_dir_name/data/www/$project_dir_name/htdocs
-
-  wget https://wordpress.org/latest.tar.gz
-  tar -xzvf latest.tar.gz
-  mv wordpress/* ./
-  rmdir wordpress/
-  rm latest.tar.gz
-
-  cd $current_dir_path/$project_dir_name
-
   read -p 'what do you want to call your new projects database? ' project_db_name
 
-  # run script within docker shell
+  # prepare and run clone-default-wp-repository.sh shell script
+  wordpress-docker-installation-script/includes/prepare-shell-script.sh ${project_dir_name} "clone-default-wp-repository.sh"
+  
+  # prepare and run setup-default-wp-database.sh shell script
+  wordpress-docker-installation-script/includes/prepare-shell-script.sh ${project_dir_name} "setup-default-wp-database.sh"
+
+  cd ${project_dir_name}
+
+  # run shell scripts
+  docker-compose exec --user devilbox php bash -l clone-default-wp-repository.sh ${project_dir_name}
   docker-compose exec --user devilbox php bash -l setup-default-wp-database.sh ${project_dir_name} ${project_db_name}
 
+  # prepare and run create-wordpress-install.sh shell script
+  # wordpress-docker-installation-script/includes/prepare-shell-script.sh ${project_dir_name} "create-wordpress-install.sh"
+  # docker-compose exec --user devilbox php bash -l create-wordpress-install.sh ${project_dir_name} ${project_db_name}
+
+  # remove shell scripts
   cd $current_dir_path
+  rm "${project_dir_name}/data/www/clone-default-wp-repository.sh"
   rm "${project_dir_name}/data/www/setup-default-wp-database.sh"
 
 fi
@@ -171,4 +181,4 @@ chmod +x wordpress-docker-installation-script/includes/update-hosts.sh
 wordpress-docker-installation-script/includes/update-hosts.sh $project_dir_name
 
 printf "\nDevilbox Install script complete! \n"
-printf "\nnow visit ${project_dir_name}.loc\n"
+printf "\nnow visit http://${project_dir_name}.loc\n"
