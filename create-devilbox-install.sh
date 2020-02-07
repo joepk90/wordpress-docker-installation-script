@@ -52,7 +52,7 @@ if [ "$run_default_wp_installer" == "y" ]
 then
   echo "Running Wordpress installer. This will create a a new Wordpress database and install Wordpress"
 
-# go back to the orignal directory where script was running
+  # go back to the orignal directory where script was running
   cd $current_dir_path
 
   echo "making the prepare-wordpress-install-script.sh script executable"
@@ -67,10 +67,13 @@ else
   if [ "$run_clone_repository_script" == "y" ]
   then
 
-    echo "making the clone-git-repoistory.sh script executable"
-    chmod +x wordpress-docker-installation-script/clone-git-repoistory.sh
+    # go back to the orignal directory where script was running
+    cd $current_dir_path
 
-    wordpress-docker-installation-script/clone-git-repoistory.sh $project_dir_name
+    echo "making the clone-git-repoistory.sh script executable"
+    chmod +x wordpress-docker-installation-script/includes/clone-git-repoistory.sh
+
+    wordpress-docker-installation-script/includes/clone-git-repoistory.sh $project_dir_name
 
   fi
 
@@ -81,10 +84,10 @@ else
 
 
   echo "making the clone-kinsta-database.sh script executable"
-  chmod +x wordpress-docker-installation-script/clone-kinsta-database.sh
+  chmod +x wordpress-docker-installation-script/includes/clone-kinsta-database.sh
 
   echo "copying clone-kinsta-database.shscript to project directory"
-  cp wordpress-docker-installation-script/clone-kinsta-database.sh "${project_dir_name}/data/www/"
+  cp wordpress-docker-installation-script/includes/clone-kinsta-database.sh "${project_dir_name}/data/www/"
 
   cd ${project_dir_name}
 
