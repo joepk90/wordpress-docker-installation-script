@@ -62,12 +62,34 @@ then
 
 else
 
+  read -p 'Do you want to clone an exisiting wordpress repository? (y/n) ' run_clone_repository_script
+
+  if [ "$run_clone_repository_script" == "y" ]
+  then
+
+    echo "making the clone-git-repoistory.sh script executable"
+    chmod +x wordpress-docker-installation-script/clone-git-repoistory.sh
+
+    wordpress-docker-installation-script/clone-git-repoistory.sh $project_dir_name
+
+  fi
+
   read -p 'Do you want to import a database from Kinsta? (y/n) ' run_kinsta_db_importer
 
   if [ "$run_kinsta_db_importer" == "y" ]
   then
 
-  printf "get kinsta DB copy script from the wordpress-docker-install.sh script"
+
+  echo "making the clone-kinsta-database.sh script executable"
+  chmod +x wordpress-docker-installation-script/clone-kinsta-database.sh
+
+  echo "copying clone-kinsta-database.shscript to project directory"
+  cp wordpress-docker-installation-script/clone-kinsta-database.sh "${project_dir_name}/data/www/"
+
+  cd ${project_dir_name}
+
+  # run script ithin docker shell
+  docker-compose exec --user devilbox php bash -l clone-kinsta-database.sh ${project_dir_name}
 
   fi
 
