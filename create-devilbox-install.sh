@@ -1,19 +1,5 @@
 current_dir_path=$(pwd)
 
-if [ -n "$user_id" ]
-then
-  echo "Your User ID is ${user_id}"
-else
-  read -p 'what is your user id (run id -u to find out)? ' user_id
-fi
-
-if [ -n "$user_group" ]
-then
-  echo "Your User Group is ${user_group}"
-else
-  read -p 'what is your user id (run id -g to find out)? ' user_group
-fi
-
 if [ -n "$project_dir_name" ]
 then
   echo "Your Project directory name is ${project_dir_name}"
@@ -34,8 +20,29 @@ chmod +x wordpress-docker-installation-script/includes/prepare-shell-script.sh
 # start install:
 #
 
+read -p 'Do you want to create a new docker instance? (y/n) ' install_docker
+
+if [ "$install_docker" == "y" ]
+then
+
+
+if [ -n "$user_id" ]
+then
+  echo "Your User ID is ${user_id}"
+else
+  read -p 'what is your user id (run id -u to find out)? ' user_id
+fi
+
+if [ -n "$user_group" ]
+then
+  echo "Your User Group is ${user_group}"
+else
+  read -p 'what is your user id (run id -g to find out)? ' user_group
+fi
+
 git clone https://github.com/cytopia/devilbox $project_dir_name
 # mkdir $project_dir_name // testing
+
 
 cd $project_dir_name
 cp env-example .env
@@ -56,8 +63,9 @@ docker-compose up -d
 
 # this could be done in one command...
 mkdir -p data/www/$project_dir_name/htdocs
-cd data/www/$project_dir_name/htdocs
+# cd data/www/$project_dir_name/htdocs
 
+fi
 
 
 #
@@ -145,26 +153,33 @@ if [ "$run_server_db_importer" == "y" ]
 then
 
 cd $current_dir_path
-cd data/www/$project_dir_name/htdocs
 
 read -p 'what do you want to call your new projects database? ' project_db_name
 read -p 'what is the server sites IP address? ' server_ip
-read -p 'what is the server sites name? ' server_name
+read -p 'what is the server user name? ' server_user_name
 read -p 'what is the server sites port? ' server_port
 read -p 'what is the server sites directory_path? ' server_dir_path
 read -p 'what is the domain of the server site? ' server_domain
 read -p 'what is the server sites database table prefix (for example: wp_)? ' server_db_table_prefix
 
-echo "making the clone-server-database.sh script executable"
-chmod +x wordpress-docker-installation-script/includes/clone-server-database.sh $server_ip $server_name $server_port $server_dir_path $server_domain $server_domain
- 
-echo "copying clone-server-database.sh script to project directory"
-cp wordpress-docker-installation-script/includes/import-server-database.sh "${project_dir_name}/data/www/"
+# todo it's not neccesary to copy it here (so the rm command should also be removed when this is fixed)
+# prepare and run clone-default-wp-repository.sh shell script
+wordpress-docker-installation-script/includes/prepare-shell-script.sh ${project_dir_name} "clone-server-database.sh"
 
-cd $current_dir_path/$project_dir_name
+# prepare and run setup-default-wp-database.sh shell script
+wordpress-docker-installation-script/includes/prepare-shell-script.sh ${project_dir_name} "import-custom-database.sh"
 
 # run script within docker shell
-docker-compose exec --user devilbox php bash -l import-server-database.sh $project_dir_name $project_db_name $kinsta_db_table_prefix $kinsta_domain
+# wordpress-docker-installation-script/includes/clone-server-database.sh $current_dir_path $project_dir_name $server_ip $server_user_name $server_port $server_dir_path $server_domain
+# docker-compose exec --user devilbox php bash -l clone-server-database.sh $current_dir_path $project_dir_name $server_ip $server_user_name $server_port $server_dir_path $server_domain
+
+cd $project_dir_name
+docker-compose exec --user devilbox php bash -l import-custom-database.sh $project_dir_name $project_db_name $server_db_table_prefix $server_domain
+
+# remove shell scripts
+cd $current_dir_path
+rm "${project_dir_name}/data/www/clone-server-database.sh"
+rm "${project_dir_name}/data/www/import-custom-database.sh"
 
 fi
 

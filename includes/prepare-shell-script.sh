@@ -15,5 +15,5 @@ fi
 printf "\nmaking the ${shell_script} script executable\n" 
 chmod +x wordpress-docker-installation-script/includes/${shell_script}
 
-printf "copying ${shell_script}  script to project directory"
+printf "\ncopying ${shell_script} script to project directory\n"
 cp wordpress-docker-installation-script/includes/${shell_script} "${project_dir_name}/data/www/"

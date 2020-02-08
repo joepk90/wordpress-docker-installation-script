@@ -31,6 +31,8 @@ else
   exit 1
 fi
 
+cd ${project_dir_name}/htdocs/
+
 # create wp-config.php file
 wp config create --dbname=$project_db_name --dbuser=root --dbhost=127.0.0.1 --dbprefix=$kinsta_db_table_prefix --extra-php <<PHP
 define( 'WP_DEBUG', true );
@@ -47,6 +49,8 @@ mysql -h mysql -u root $project_db_name < docker-db.sql
 # find and replace domain in database
 wp search-replace "${kinsta_domain}"  "${project_dir_name}.loc" --all-tables --precise
 
-echo "import complete"
+printf "\nimport complete \n"
 
-rm wordpress-database-import.sh
+rm docker-db.sql
+
+exit 1
