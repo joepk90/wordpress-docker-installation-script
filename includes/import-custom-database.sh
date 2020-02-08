@@ -31,6 +31,44 @@ else
   exit 1
 fi
 
+#
+# FUNCTIONS:
+#
+
+# function: check if database already exists
+function does_db_exist {
+
+  if mysql -h mysql -u root -e "use ${project_db_name}" 2> /dev/null;
+  then
+
+    # echo 'does exists'
+    return 1 # database exists
+
+  else
+    # echo 'does not exist'
+    return 0 # database does not exist'
+  
+  fi
+
+}  
+
+# function: import database
+run_wp_import () {
+
+  wp db import docker-db.sql
+
+  # import using myql
+  # mysql -h mysql -u root $project_db_name < docker-db.sql
+
+  # find and replace domain in database
+  wp search-replace "${kinsta_domain}"  "${project_dir_name}.loc" --all-tables --precise
+}
+
+
+#
+# START SCRIPT:
+#
+
 cd ${project_dir_name}/htdocs/
 
 # create wp-config.php file
@@ -39,15 +77,33 @@ define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
 PHP
 
-# TODO could be better to use the CLI to import the database (wp db import). I had issues trying to do this last time
+database_exists=$(does_db_exist)
+overrite_existing_database=n
 
-wp db create --dbuser=root --dbpass=""
+if [ "$database_exists" == 1 ]
+then
 
-# import using myql
-mysql -h mysql -u root $project_db_name < docker-db.sql
+  printf "\ndatabase already exists!\n"
+  read -p 'do you want to continue importing the database? this will overwrite the current database: y/n' overrite_existing_database
 
-# find and replace domain in database
-wp search-replace "${kinsta_domain}"  "${project_dir_name}.loc" --all-tables --precise
+else
+
+  # if no database exists, create it and run the import
+  wp db create --dbuser=root --dbpass=""
+  run_wp_import
+
+fi
+
+
+if [ "$overrite_existing_database" == 'y' ]
+then
+
+  # if a database already exists, reset it and then run the import
+  wp db reset --yes
+  run_wp_import
+
+fi
+
 
 printf "\nimport complete \n"
 
