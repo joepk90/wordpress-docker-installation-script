@@ -1,3 +1,7 @@
+# SHELL SCRIPT
+# will be run from withon the docker shell
+# starting directory: project/data/www/
+
 if [ -n  "$1" ]
 then
 project_dir_name=$1
