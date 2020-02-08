@@ -170,7 +170,7 @@ wordpress-docker-installation-script/includes/prepare-shell-script.sh ${project_
 wordpress-docker-installation-script/includes/prepare-shell-script.sh ${project_dir_name} "import-custom-database.sh"
 
 # run script within docker shell
-# wordpress-docker-installation-script/includes/clone-server-database.sh $current_dir_path $project_dir_name $server_ip $server_user_name $server_port $server_dir_path $server_domain
+wordpress-docker-installation-script/includes/clone-server-database.sh $current_dir_path $project_dir_name $server_ip $server_user_name $server_port $server_dir_path $server_domain
 # docker-compose exec --user devilbox php bash -l clone-server-database.sh $current_dir_path $project_dir_name $server_ip $server_user_name $server_port $server_dir_path $server_domain
 
 cd $project_dir_name
