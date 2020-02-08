@@ -155,11 +155,11 @@ then
 cd $current_dir_path
 
 read -p 'what do you want to call your new projects database? ' project_db_name
-read -p 'what is the server sites IP address? ' server_ip
-read -p 'what is the server user name? ' server_user_name
+read -p 'what is the server sites IP address or domain? ' server_ip
+read -p 'what is the name of the server user? ' server_user_name
 read -p 'what is the server sites port? ' server_port
 read -p 'what is the server sites directory_path? ' server_dir_path
-read -p 'what is the domain of the server site? ' server_domain
+read -p 'what is the domain of the site you are cloning? ' server_domain
 read -p 'what is the server sites database table prefix (for example: wp_)? ' server_db_table_prefix
 
 # todo it's not neccesary to copy it here (so the rm command should also be removed when this is fixed)
