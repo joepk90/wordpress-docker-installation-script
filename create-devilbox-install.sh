@@ -15,57 +15,15 @@ fi
 chmod +x wordpress-docker-installation-script/includes/prepare-shell-script.sh
 
 
-
 #
 # start install:
 #
 
-read -p 'Do you want to create a new docker instance? (y/n) ' install_docker
 
-if [ "$install_docker" == "y" ]
-then
+# install and configure docker
+chmod +x wordpress-docker-installation-script/includes/configure-docker.sh
+wordpress-docker-installation-script/includes/configure-docker.sh ${project_dir_name}
 
-
-if [ -n "$user_id" ]
-then
-  echo "Your User ID is ${user_id}"
-else
-  read -p 'what is your user id (run id -u to find out)? ' user_id
-fi
-
-if [ -n "$user_group" ]
-then
-  echo "Your User Group is ${user_group}"
-else
-  read -p 'what is your user id (run id -g to find out)? ' user_group
-fi
-
-git clone https://github.com/cytopia/devilbox $project_dir_name
-# mkdir $project_dir_name // testing
-
-
-cd $project_dir_name
-cp env-example .env
-
-# setup env file
-# todo make this work automatically ithout providing them in the promt
-# user_id=id -u
-# user_group=id -g
-
-# replace NEW_UID in .env file (using variables not yet tested)
-sed -i '' "s/NEW_UID=1000/NEW_UID=${user_id}/g" .env
-
-# replace NEW_GID in .env file (using variables not yet tested)
-sed -i '' "s/NEW_GID=1000/NEW_GID=${user_group}/g" .env
-
-# start devil box running (maybe turn this into a flag? -- start)
-docker-compose up -d
-
-# this could be done in one command...
-mkdir -p data/www/$project_dir_name/htdocs
-# cd data/www/$project_dir_name/htdocs
-
-fi
 
 
 #
