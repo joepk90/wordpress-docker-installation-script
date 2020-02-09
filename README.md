@@ -10,27 +10,22 @@ Finally you will need the following requirements before starting the script.
 
 # required arguments:
 
-    User ID: // run $ id -u
-    User Group: // run $ id -g
     Directory Name: // name of the directory you want the project files to be located
     Repository Url: // for example: git@bitbucket.org:owner/repo.git
-    Kinsta IP: 
-    Kinsta Name: 
-    Kinsta Port: 
-    Kinsta Path: 
+    Server IP or Domain: 
+    Server User Name: 
+    Server Port: 
+    Server Path: 
     Database Name: // database name of your choice
-    Kinsta Domain: 
-    Kinsta Database Prefix: // for example: wp_
-
+    Site Domain: 
+    Site Database Prefix: // for example: wp_
+ls
 
 # make the install script executable
-chmod +x wordpress-docker-installation-script/wordpress-docker-install.sh
+chmod +x wordpress-docker-installation-script/create-devilbox-install.sh
 
 # run the install script
-wordpress-docker-installation-script/wordpress-docker-install.sh
-
-
-TODO: add echo statements to describe process - helpful for debugging
+wordpress-docker-installation-script/create-devilbox-install.sh
 
 # Enable caching in the .env file (Optional)
 MOUNT_OPTIONS=,cached
