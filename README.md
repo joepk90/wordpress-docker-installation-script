@@ -19,7 +19,7 @@ Finally you will need the following requirements before starting the script.
     Database Name: // database name of your choice
     Site Domain: 
     Site Database Prefix: // for example: wp_
-ls
+
 
 # make the install script executable
 chmod +x wordpress-docker-installation-script/create-devilbox-install.sh
