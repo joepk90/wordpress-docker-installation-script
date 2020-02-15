@@ -109,4 +109,29 @@ printf "\nimport complete \n"
 
 rm docker-db.sql
 
+printf "\nchecking network setup.\n"
+
+# not yet working
+if $(wp core is-installed --network); then
+    echo 'network is a multisite'
+    echo 'adding additional multisite wp-config.php configuration'
+    wp config set MULTISITE true --raw
+    wp config set name='DOMAIN_CURRENT_SITE' value="${project_db_name}.loc"
+    wp config set name='PATH_CURRENT_SITE' value='/'
+    wp config set SITE_ID_CURRENT_SITE 1 --raw
+    wp config set BLOG_ID_CURRENT_SITE 1 --raw
+
+
+  # todo move out of first if statement
+  read -p 'It looks like this is a multisite. Is this a subdomain install?: y/n' is_subdomain_install
+  if [ "$is_subdomain_install" == 'y' ]
+  then
+  wp config set SUBDOMAIN_INSTALL true --raw
+  else
+  wp config set SUBDOMAIN_INSTALL false --raw
+  fi
+
+
+fi
+
 exit 1
