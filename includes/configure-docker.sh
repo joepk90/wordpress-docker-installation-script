@@ -1,6 +1,13 @@
 if [ -n  "$1" ]
 then
-project_dir_name=$1
+docker_dir_name=$1
+else
+  exit 1
+fi
+
+if [ -n  "$2" ]
+then
+project_dir_name=$2
 else
   exit 1
 fi
@@ -27,11 +34,11 @@ else
 read -p 'what is your user id (run id -g to find out)? ' user_group
 fi
 
-git clone https://github.com/cytopia/devilbox $project_dir_name
+git clone https://github.com/cytopia/devilbox $docker_dir_name
 # mkdir $project_dir_name // testing
 
 
-cd $project_dir_name
+cd $docker_dir_name
 cp env-example .env
 
 # replace NEW_UID in .env file (using variables not yet tested)

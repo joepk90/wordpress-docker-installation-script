@@ -1,6 +1,14 @@
 if [ -n  "$1" ]
 then
-project_dir_name=$1
+docker_dir_name=$1
+else
+    printf "\nProject directry name invalid! \n"
+  exit 1
+fi
+
+if [ -n  "$2" ]
+then
+project_dir_name=$2
 else
     printf "\nProject directry name invalid! \n"
   exit 1
@@ -9,17 +17,17 @@ fi
 read -p 'what is the URL of the repository you want to clone? ' project_repo_name
 
 # this could be done in one command...
-mkdir -p $project_dir_name/data/www/$project_dir_name/htdocs
+mkdir -p $docker_dir_name/data/www/$project_dir_name/htdocs
 # cd data/www/$project_dir_name/htdocs
 
 # get project files from bitbucket repository
 # -C flag is for specifying a path
-git -C $project_dir_name/data/www/$project_dir_name/htdocs clone $project_repo_name repository-files
+git -C $docker_dir_name/data/www/$project_dir_name/htdocs clone $project_repo_name repository-files
 
 # another flag or command might be required here to mv hidden files
 # note: .[^.]* means all hidden files except . and ..
-mv $project_dir_name/data/www/$project_dir_name/htdocs/repository-files/{,.[^.]}* $project_dir_name/data/www/$project_dir_name/htdocs/
-rm -rf $project_dir_name/data/www/$project_dir_name/htdocs/repository-files/
+mv $docker_dir_name/data/www/$project_dir_name/htdocs/repository-files/{,.[^.]}* $docker_dir_name/data/www/$project_dir_name/htdocs/
+rm -rf $docker_dir_name/data/www/$project_dir_name/htdocs/repository-files/
 
 
 

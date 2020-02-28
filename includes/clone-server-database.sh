@@ -17,53 +17,61 @@ fi
 
 if [ -n  "$2" ]
 then
-project_dir_name=$2
+docker_dir_name=$2
 else
-  printf "\ncno project directory path provided\n"
+  printf "\ncno current directory path provided\n"
   exit 1
 fi
 
 if [ -n  "$3" ]
 then
-server_ip=$3
+project_dir_name=$3
 else
-  printf "\ncno server ip provided\n"
+  printf "\ncno project directory path provided\n"
   exit 1
 fi
 
 if [ -n  "$4" ]
 then
-user_name=$4
+server_ip=$4
 else
-  printf "\ncno user name provided\n"
+  printf "\ncno server ip provided\n"
   exit 1
 fi
 
 if [ -n  "$5" ]
 then
-printf "\ncno server port provided\n"
-server_port=$5
+user_name=$5
 else
+  printf "\ncno user name provided\n"
   exit 1
 fi
 
 if [ -n  "$6" ]
 then
-server_dir_path=$6
+printf "\ncno server port provided\n"
+server_port=$6
 else
-  printf "\ncno server directory path provided\n"
   exit 1
 fi
 
 if [ -n  "$7" ]
 then
-server_domain=$7
+server_dir_path=$7
+else
+  printf "\ncno server directory path provided\n"
+  exit 1
+fi
+
+if [ -n  "$8" ]
+then
+server_domain=$8
 else
   printf "\ncno server domain path provided\n"
   exit 1
 fi
 
-cd $current_dir_path/$project_dir_name/data/www/$project_dir_name/htdocs
+cd $current_dir_path/$docker_dir_name/data/www/$project_dir_name/htdocs
 
 # export database from server install
 # -o "StrictHostKeyChecking no" stops shh checking for authenticity of key fingerprint
