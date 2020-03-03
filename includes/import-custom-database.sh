@@ -38,6 +38,8 @@ fi
 # function: check if database already exists
 function does_db_exist {
 
+  printf "\nchecking if database already exists \n"
+
   if mysql -h mysql -u root -e "use ${project_db_name}" 2> /dev/null;
   then
 
@@ -60,8 +62,6 @@ run_wp_import () {
   # import using myql
   # mysql -h mysql -u root $project_db_name < docker-db.sql
 
-  # find and replace domain in database
-  wp search-replace "${kinsta_domain}"  "${project_dir_name}.loc" --all-tables --precise
 }
 
 
@@ -71,14 +71,19 @@ run_wp_import () {
 
 cd ${project_dir_name}/htdocs/
 
+printf "\ncreating wp.config.php \n"
+
 # create wp-config.php file
 wp config create --dbname=$project_db_name --dbuser=root --dbhost=127.0.0.1 --dbprefix=$kinsta_db_table_prefix --extra-php <<PHP
 define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
 PHP
 
+
+
+# todo this part does not seem to be working. database exists check never seems to be run...
 database_exists=$(does_db_exist)
-overrite_existing_database=n
+overrite_existing_database='n'
 
 if [ "$database_exists" == 1 ]
 then
@@ -111,27 +116,40 @@ rm docker-db.sql
 
 printf "\nchecking network setup.\n"
 
-# not yet working
-if $(wp core is-installed --network); then
+# I have never gotten an actual reaponse from the wp core is-installed --network (it's always '')
+is_multisite=$(wp core is-installed --network)
+
+
+if [ "$is_multisite" == '' ]
+then
+read -p 'is this a multisite: y/n ' is_multisite
+fi
+
+if [ "$is_multisite" == 'y' ]
+then
     echo 'network is a multisite'
     echo 'adding additional multisite wp-config.php configuration'
     wp config set MULTISITE true --raw
-    wp config set name='DOMAIN_CURRENT_SITE' value="${project_db_name}.loc"
+    wp config set name='DOMAIN_CURRENT_SITE' value="${project_dir_name}.loc"
     wp config set name='PATH_CURRENT_SITE' value='/'
     wp config set SITE_ID_CURRENT_SITE 1 --raw
     wp config set BLOG_ID_CURRENT_SITE 1 --raw
 
 
   # todo move out of first if statement
-  read -p 'It looks like this is a multisite. Is this a subdomain install?: y/n' is_subdomain_install
+  read -p 'Is this a subdomain install?: y/n ' is_subdomain_install
   if [ "$is_subdomain_install" == 'y' ]
   then
   wp config set SUBDOMAIN_INSTALL true --raw
   else
   wp config set SUBDOMAIN_INSTALL false --raw
   fi
-
-
 fi
+
+
+printf "\nrunning find and replace: ${kinsta_domain} -> ${project_dir_name}.loc \n"
+
+ # find and replace domain in database
+  wp search-replace "${kinsta_domain}"  "${project_dir_name}.loc" --all-tables --precise
 
 exit 1
