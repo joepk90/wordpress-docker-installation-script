@@ -12,7 +12,7 @@ if [ -n "$project_dir_name" ]
 then
   echo "Your Project directory name is ${project_dir_name}"
 else
-  read -p 'what is the name of your new projects directory? ' project_dir_name
+  read -p 'what is the name of your projects directory? ' project_dir_name
 fi
 
 #
@@ -126,7 +126,14 @@ read -p 'what is the name of the server user? ' server_user_name
 read -p 'what is the server sites port? ' server_port
 read -p 'what is the server sites directory_path? ' server_dir_path
 read -p 'what is the domain of the site you are cloning? ' server_domain
-read -p 'what is the server sites database table prefix (for example: wp_)? ' server_db_table_prefix
+read -p 'what is the server sites database table prefix (leave blank to use: wp_)? ' server_db_table_prefix
+
+# set table prfix to wp_ if option left blank
+if [ "$server_db_table_prefix" == '' ]
+then
+server_db_table_prefix='wp_'
+fi
+
 
 # todo it's not neccesary to copy it here (so the rm command should also be removed when this is fixed)
 # prepare and run clone-default-wp-repository.sh shell script
