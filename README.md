@@ -29,3 +29,14 @@ wordpress-docker-installation-script/create-devilbox-install.sh
 
 # Enable caching in the .env file (Optional)
 MOUNT_OPTIONS=,cached
+
+
+# To enable multisite rewreite rules
+
+# Enable the following line:
+HTTPD_SERVER=apache-2.4
+
+# Disable the following line:
+HTTPD_SERVER=nginx-mainline
+
+# TODO setup nginx config for mutlisites instead
